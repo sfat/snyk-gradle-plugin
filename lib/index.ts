@@ -406,9 +406,7 @@ to
     error.message = `${chalk.red.bold('Gradle Error (short):\n' + gradleErrorEssence)}
 
 ${blackOnYellow('===== DEBUG INFORMATION START =====')}
-// ${orange(fullCommandText)}
 ${orange(gradleVersionOutput)}
-// ${orange(error.message)}
 ${blackOnYellow('===== DEBUG INFORMATION END =====')}
 
 ${chalk.red.bold(mainErrorMessage)}`;

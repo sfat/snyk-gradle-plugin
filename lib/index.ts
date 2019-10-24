@@ -58,6 +58,7 @@ export interface GradleInspectOptions {
 }
 
 type Options = api.InspectOptions & GradleInspectOptions;
+type VersionBuildInfo = api.VersionBuildInfo;
 
 // Overload type definitions, so that when you call inspect() with an `options` literal (e.g. in tests),
 // you will get a result of a specific corresponding type.
@@ -112,6 +113,7 @@ export async function inspect(
     package: depTreeAndDepRootNames.depTree,
     meta: {
       gradleProjectName: depTreeAndDepRootNames.gradleProjectName,
+      versionBuildInfo: depTreeAndDepRootNames.versionBuildInfo,
     },
   };
 }
@@ -129,6 +131,7 @@ export interface JsonDepsScriptResult {
   defaultProject: string;
   projects: ProjectsDict;
   allSubProjectNames: string[];
+  versionBuildInfo: VersionBuildInfo;
 }
 
 interface ProjectsDict {
@@ -159,7 +162,12 @@ function extractJsonFromScriptOutput(stdoutText: string): JsonDepsScriptResult {
 }
 
 async function getAllDepsOneProject(root: string, targetFile: string, options: Options, subProject?: string):
-    Promise<{depTree: DepTree, allSubProjectNames: string[], gradleProjectName: string}> {
+    Promise<{
+      depTree: DepTree,
+      allSubProjectNames: string[],
+      gradleProjectName: string,
+      versionBuildInfo: VersionBuildInfo,
+  }> {
   const packageName = path.basename(root);
   const allProjectDeps = await getAllDeps(root, targetFile, options);
   const allSubProjectNames = allProjectDeps.allSubProjectNames;
@@ -169,6 +177,7 @@ async function getAllDepsOneProject(root: string, targetFile: string, options: O
       depTree,
       allSubProjectNames,
       gradleProjectName: meta.gradleProjectName,
+      versionBuildInfo: allProjectDeps.versionBuildInfo,
     };
   }
 
@@ -185,6 +194,7 @@ async function getAllDepsOneProject(root: string, targetFile: string, options: O
     },
     allSubProjectNames,
     gradleProjectName: defaultProject,
+    versionBuildInfo: allProjectDeps.versionBuildInfo,
   };
 }
 
@@ -225,6 +235,7 @@ async function getAllDepsAllProjects(root: string, targetFile: string, options: 
       targetFile: targetFileFilteredForCompatibility(allProjectDeps.projects[proj].targetFile),
       meta: {
         gradleProjectName,
+        buildInfoVersion: allProjectDeps.versionBuildInfo,
       },
       depTree: {
         dependencies: allProjectDeps.projects[proj].depDict,
@@ -278,6 +289,27 @@ async function getInjectedScriptPath(): Promise<{injectedScripPath: string, clea
   }
 }
 
+function getVersionBuildInfo(gradleVersionOutput: string): VersionBuildInfo {
+  const gradleOutputArray = gradleVersionOutput.split('\n');
+
+  // from first 3 new lines, we get the gradle version
+  const gradleVersion = gradleOutputArray[2].split(' ')[1].trim();
+  const versionMetaInformation = gradleOutputArray.slice(4, gradleOutputArray.length);
+  // from line 4 until the end we get multiple meta information such as Java, Groovy, Kotlin, etc.
+
+  const metaBuildVersion: { [index: string]: string } = {};
+  // we want to remove all the new lines before processing each line from gradle -v output
+  versionMetaInformation.map((value) => value.replace('/(\r\n|\n|\r)/gm', ''))
+  .filter((value) => value && value.length > 0)
+  .map((value) => value.split(/:(.+)/))
+  .forEach((splitValue) => metaBuildVersion[toCamelCase(splitValue[0].trim())] = splitValue[1].trim());
+
+  return {
+    gradleVersion,
+    metaBuildVersion,
+  };
+}
+
 async function getAllDeps(root: string, targetFile: string, options: Options):
     Promise<JsonDepsScriptResult> {
 
@@ -304,7 +336,9 @@ async function getAllDeps(root: string, targetFile: string, options: Options):
     if (cleanupCallback) {
       cleanupCallback();
     }
-    return extractJsonFromScriptOutput(stdoutText);
+    const extractedJson = extractJsonFromScriptOutput(stdoutText);
+    extractedJson.versionBuildInfo = getVersionBuildInfo(gradleVersionOutput);
+    return extractedJson;
   } catch (error0) {
     const error: Error = error0;
     const gradleErrorMarkers = /^\s*>\s.*$/;
@@ -380,6 +414,13 @@ ${blackOnYellow('===== DEBUG INFORMATION END =====')}
 ${chalk.red.bold(mainErrorMessage)}`;
     throw error;
   }
+}
+
+function toCamelCase(input: string) {
+  input = input.toLowerCase().replace(/(?:(^.)|([-_\s]+.))/g, (match: string) => {
+    return match.charAt(match.length - 1).toUpperCase();
+  });
+  return input.charAt(0).toLowerCase() + input.substring(1);
 }
 
 function getCommand(root: string, targetFile: string) {
@@ -466,4 +507,6 @@ function buildArgs(
 export const exportsForTests = {
   buildArgs,
   extractJsonFromScriptOutput,
+  getVersionBuildInfo,
+  toCamelCase,
 };

@@ -302,7 +302,7 @@ function cleanupVersionOutput(gradleVersionOutput: string): string {
 
 function getVersionBuildInfo(gradleVersionOutput: string): VersionBuildInfo {
   const cleanedVersionOutput: string = cleanupVersionOutput(gradleVersionOutput);
-  const gradleOutputArray = cleanedVersionOutput.replace(/\r\n/, '\n').split('\n');
+  const gradleOutputArray = cleanedVersionOutput.split(/\r\n|\r|\n/);
 
   // from first 3 new lines, we get the gradle version
   const gradleVersion = gradleOutputArray[1].split(' ')[1].trim();

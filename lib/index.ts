@@ -309,6 +309,8 @@ function getVersionBuildInfo(gradleVersionOutput: string): VersionBuildInfo {
   const versionMetaInformation = gradleOutputArray.slice(4, gradleOutputArray.length);
   // from line 4 until the end we get multiple meta information such as Java, Groovy, Kotlin, etc.
 
+  debugLog('gradleOutputArray' + JSON.stringify(gradleOutputArray));
+  debugLog('versionMetaInformation' + JSON.stringify(versionMetaInformation));
   const metaBuildVersion: { [index: string]: string } = {};
   // we want to remove all the new lines before processing each line from gradle -v output
   versionMetaInformation.map((value) => value.replace(/[\s\S](\r\n|\n|\r)/g, ''))

@@ -18,9 +18,9 @@
     "build": "tsc",
     "lint": "tslint --project tsconfig.json --format stylish",
     "prepare": "npm run build",
-    "test": "npm run lint && tsc -p tsconfig-test.json && npm run test-functional && npm run test-system",
+    "test": "npm run test-system -d",
     "test-functional": "tap --node-arg=-r --node-arg=ts-node/register -R spec ./test/functional/*.test.[tj]s",
-    "test-system": "tap --node-arg=-r --node-arg=ts-node/register -R spec --timeout=180 ./test/system/*.test.[tj]s",
+    "test-system": "DEBUG=* tap --node-arg=-r --node-arg=ts-node/register -R spec --timeout=180 ./test/system/kotlin.test.ts",
     "test-manual": "jest test/manual -b"
   },
   "author": "snyk.io",

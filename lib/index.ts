@@ -316,7 +316,7 @@ function getVersionBuildInfo(gradleVersionOutput: string): VersionBuildInfo {
   versionMetaInformation.map((value) => value.replace(/[\s\S](\r\n|\n|\r)/g, ''))
   .filter((value) => value && value.length > 0)
   .map((value) => value.split(/(.*): (.*)/))
-  .forEach((splitValue) => metaBuildVersion[toCamelCase(splitValue[1].trim())] = splitValue[2].trim());
+  .forEach((splitValue) => debugLog('splitValue: ' + JSON.stringify(splitValue)));
 
   return {
     gradleVersion,

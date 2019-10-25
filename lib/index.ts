@@ -314,10 +314,9 @@ function getVersionBuildInfo(gradleVersionOutput: string): VersionBuildInfo {
   const metaBuildVersion: { [index: string]: string } = {};
   // we want to remove all the new lines before processing each line from gradle -v output
   versionMetaInformation.map((value) => value.replace(/[\s\S](\r\n|\n|\r)/g, ''))
-  .filter((value) => value && value.length > 0)
+  .filter((value) => value && value.length > 0 && value.includes(': '))
   .map((value) => value.split(/(.*): (.*)/))
-  .forEach((splitValue) => debugLog('splitValue: ' + JSON.stringify(splitValue)));
-
+  .forEach((splitValue) => metaBuildVersion[toCamelCase(splitValue[1].trim())] = splitValue[2].trim());
   return {
     gradleVersion,
     metaBuildVersion,

@@ -203,6 +203,8 @@ function getDepsSubProject(root: string, subProject: string, allProjectDeps: Jso
   const packageName = `${path.basename(root)}/${subProject}`;
   const gradleProjectName = `${allProjectDeps.defaultProject}/${subProject}`;
 
+  debugLog('projects: ' + JSON.stringify(!allProjectDeps.projects));
+  debugLog('subProject: ' + subProject + JSON.stringify(!allProjectDeps.projects[subProject]));
   if (!allProjectDeps.projects || !allProjectDeps.projects[subProject]) {
     throw new MissingSubProjectError(subProject, Object.keys(allProjectDeps));
   }

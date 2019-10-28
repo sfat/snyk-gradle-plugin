@@ -301,7 +301,7 @@ function cleanupVersionOutput(gradleVersionOutput: string): string {
   return '';
 }
 
-function getVersionBuildInfo(gradleVersionOutput: string): VersionBuildInfo {
+function getVersionBuildInfo(gradleVersionOutput: string) {
     const cleanedVersionOutput: string = cleanupVersionOutput(gradleVersionOutput);
     if (cleanedVersionOutput !== '') {
       const gradleOutputArray = cleanedVersionOutput.split(/\r\n|\r|\n/);
@@ -323,7 +323,7 @@ function getVersionBuildInfo(gradleVersionOutput: string): VersionBuildInfo {
         metaBuildVersion,
       };
     }
-    throw new Error('cannot retrieve version build info');
+    // throw new Error('cannot retrieve version build info');
 }
 
 async function getAllDeps(root: string, targetFile: string, options: Options):
@@ -354,7 +354,10 @@ async function getAllDeps(root: string, targetFile: string, options: Options):
     }
     const extractedJson = extractJsonFromScriptOutput(stdoutText);
     try {
-      extractedJson.versionBuildInfo = getVersionBuildInfo(gradleVersionOutput);
+      const versionBuildInfo = getVersionBuildInfo(gradleVersionOutput);
+      if (versionBuildInfo) {
+        extractedJson.versionBuildInfo = versionBuildInfo;
+      }
     } catch (error) {
       debugLog('version build info not present, skipping ahead: ' + error);
     }

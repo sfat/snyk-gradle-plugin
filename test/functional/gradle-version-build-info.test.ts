@@ -16,7 +16,7 @@ test('should extract gradle -v output info', async (t) => {
       'Ant:          Apache Ant(TM) version 1.9.11 compiled on March 23 2018\n' +
       'JVM:          1.8.0_222 (Eclipse OpenJ9 openj9-0.15.1)\n' +
       'OS:           Mac OS X 10.14.6 x86_64';
-  const versionBuildInfo = testableMethods.getVersionBuildInfo(expectedGradleOutput);
+  const versionBuildInfo = testableMethods.getVersionBuildInfo(expectedGradleOutput)!;
   t.equal(versionBuildInfo.gradleVersion, '4.10.3', 'returns correct gradle version');
   t.equal(versionBuildInfo.metaBuildVersion.buildTime, '2018-12-05 00:50:54 UTC', 'returns build time');
   t.equal(versionBuildInfo.metaBuildVersion.revision, 'e76905e3a1034e6f724566aeb985621347ff43bc', 'returns revision');
@@ -54,7 +54,7 @@ test('should extract gradle -v output info when running gradlew -v the first tim
       'Ant:          Apache Ant(TM) version 1.9.13 compiled on July 10 2018\n' +
       'JVM:          9.0.4 (Oracle Corporation 9.0.4+11)\n' +
       'OS:           Mac OS X 10.15 x86_64';
-  const versionBuildInfo = testableMethods.getVersionBuildInfo(expectedGradleOutput);
+  const versionBuildInfo = testableMethods.getVersionBuildInfo(expectedGradleOutput)!;
   t.equal(versionBuildInfo.gradleVersion, '5.4.1', 'returns correct gradle version');
   t.equal(versionBuildInfo.metaBuildVersion.buildTime, '2019-04-26 08:14:42 UTC', 'returns build time');
   t.equal(versionBuildInfo.metaBuildVersion.revision, '261d171646b36a6a28d5a19a69676cd098a4c19d', 'returns revision');

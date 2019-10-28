@@ -166,7 +166,7 @@ async function getAllDepsOneProject(root: string, targetFile: string, options: O
       depTree: DepTree,
       allSubProjectNames: string[],
       gradleProjectName: string,
-      versionBuildInfo: VersionBuildInfo,
+      versionBuildInfo?: VersionBuildInfo,
   }> {
   const packageName = path.basename(root);
   const allProjectDeps = await getAllDeps(root, targetFile, options);

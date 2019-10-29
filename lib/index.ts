@@ -235,7 +235,7 @@ async function getAllDepsAllProjects(root: string, targetFile: string, options: 
       targetFile: targetFileFilteredForCompatibility(allProjectDeps.projects[proj].targetFile),
       meta: {
         gradleProjectName,
-        buildInfoVersion: allProjectDeps.versionBuildInfo,
+        versionBuildInfo: allProjectDeps.versionBuildInfo,
       },
       depTree: {
         dependencies: allProjectDeps.projects[proj].depDict,

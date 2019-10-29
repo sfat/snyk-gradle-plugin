@@ -177,7 +177,7 @@ async function getAllDepsOneProject(root: string, targetFile: string, options: O
       depTree,
       allSubProjectNames,
       gradleProjectName: meta.gradleProjectName,
-      versionBuildInfo: allProjectDeps.versionBuildInfo,
+      versionBuildInfo: undefined,
     };
   }
 
@@ -194,7 +194,7 @@ async function getAllDepsOneProject(root: string, targetFile: string, options: O
     },
     allSubProjectNames,
     gradleProjectName: defaultProject,
-    versionBuildInfo: allProjectDeps.versionBuildInfo,
+    versionBuildInfo: undefined,
   };
 }
 
@@ -353,11 +353,11 @@ async function getAllDeps(root: string, targetFile: string, options: Options):
       cleanupCallback();
     }
     const extractedJson = extractJsonFromScriptOutput(stdoutText);
-    try {
-      extractedJson.versionBuildInfo = getVersionBuildInfo(gradleVersionOutput);
-    } catch (error) {
-      debugLog('version build info not present, skipping ahead: ' + error);
-    }
+    // try {
+    //   extractedJson.versionBuildInfo = getVersionBuildInfo(gradleVersionOutput);
+    // } catch (error) {
+    //   debugLog('version build info not present, skipping ahead: ' + error);
+    // }
     return extractedJson;
   } catch (error0) {
     const error: Error = error0;

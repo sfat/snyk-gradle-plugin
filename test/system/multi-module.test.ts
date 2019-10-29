@@ -221,7 +221,7 @@ test('multi-project: parallel with allSubProjects produces multiple results with
   for (const p of result.scannedProjects) {
     names.add(p.depTree.name!);
     newNames.add(p.meta!.gradleProjectName);
-    t.ok(p.meta!.buildInfoVersion.gradleVersion !== null);
+    t.ok(p.meta!.versionBuildInfo.gradleVersion !== null);
   }
   t.deepEqual(names, new Set<string>([
     'multi-project-parallel',

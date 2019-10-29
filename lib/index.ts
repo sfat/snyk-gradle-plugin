@@ -349,7 +349,7 @@ async function getAllDeps(root: string, targetFile: string, options: Options):
       cleanupCallback();
     }
     const extractedJson = extractJsonFromScriptOutput(stdoutText);
-    extractedJson.versionBuildInfo = getVersionBuildInfo(gradleVersionOutput);
+    // extractedJson.versionBuildInfo = getVersionBuildInfo(gradleVersionOutput);
     return extractedJson;
   } catch (error0) {
     const error: Error = error0;

@@ -131,7 +131,7 @@ export interface JsonDepsScriptResult {
   defaultProject: string;
   projects: ProjectsDict;
   allSubProjectNames: string[];
-  versionBuildInfo: VersionBuildInfo;
+  versionBuildInfo?: VersionBuildInfo;
 }
 
 interface ProjectsDict {
@@ -166,7 +166,7 @@ async function getAllDepsOneProject(root: string, targetFile: string, options: O
       depTree: DepTree,
       allSubProjectNames: string[],
       gradleProjectName: string,
-      versionBuildInfo: VersionBuildInfo,
+      versionBuildInfo?: VersionBuildInfo,
   }> {
   const packageName = path.basename(root);
   const allProjectDeps = await getAllDeps(root, targetFile, options);
@@ -323,7 +323,7 @@ function getVersionBuildInfo(gradleVersionOutput: string): VersionBuildInfo {
         metaBuildVersion,
       };
     }
-    throw new Error('cannot retrieve version build info');
+    return {} as VersionBuildInfo;
 }
 
 async function getAllDeps(root: string, targetFile: string, options: Options):

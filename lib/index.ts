@@ -302,6 +302,7 @@ function cleanupVersionOutput(gradleVersionOutput: string): string {
 }
 
 function getVersionBuildInfo(gradleVersionOutput: string): VersionBuildInfo | undefined {
+  try {
     const cleanedVersionOutput: string = cleanupVersionOutput(gradleVersionOutput);
     if (cleanedVersionOutput !== '') {
       const gradleOutputArray = cleanedVersionOutput.split(/\r\n|\r|\n/);
@@ -323,7 +324,10 @@ function getVersionBuildInfo(gradleVersionOutput: string): VersionBuildInfo | un
         metaBuildVersion,
       };
     }
+  } catch (error) {
+    debugLog('version build info not present, skipping ahead: ' + error);
     return undefined;
+  }
 }
 
 async function getAllDeps(root: string, targetFile: string, options: Options):
@@ -353,11 +357,9 @@ async function getAllDeps(root: string, targetFile: string, options: Options):
       cleanupCallback();
     }
     const extractedJson = extractJsonFromScriptOutput(stdoutText);
-    // try {
-    //   extractedJson.versionBuildInfo = getVersionBuildInfo(gradleVersionOutput);
-    // } catch (error) {
-    //   debugLog('version build info not present, skipping ahead: ' + error);
-    // }
+    if (getVersionBuildInfo(gradleVersionOutput)) {
+      extractedJson.versionBuildInfo = getVersionBuildInfo(gradleVersionOutput);
+    }
     return extractedJson;
   } catch (error0) {
     const error: Error = error0;

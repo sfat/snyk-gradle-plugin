@@ -235,7 +235,7 @@ async function getAllDepsAllProjects(root: string, targetFile: string, options: 
       targetFile: targetFileFilteredForCompatibility(allProjectDeps.projects[proj].targetFile),
       meta: {
         gradleProjectName,
-        versionBuildInfo: allProjectDeps.versionBuildInfo,
+        buildInfoVersion: allProjectDeps.versionBuildInfo,
       },
       depTree: {
         dependencies: allProjectDeps.projects[proj].depDict,
@@ -315,6 +315,7 @@ function getVersionBuildInfo(gradleVersionOutput: string): VersionBuildInfo {
   .filter((value) => value && value.length > 0 && value.includes(': '))
   .map((value) => value.split(/(.*): (.*)/))
   .forEach((splitValue) => metaBuildVersion[toCamelCase(splitValue[1].trim())] = splitValue[2].trim());
+
   return {
     gradleVersion,
     metaBuildVersion,

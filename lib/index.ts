@@ -131,7 +131,7 @@ export interface JsonDepsScriptResult {
   defaultProject: string;
   projects: ProjectsDict;
   allSubProjectNames: string[];
-  versionBuildInfo: VersionBuildInfo;
+  // versionBuildInfo: VersionBuildInfo;
 }
 
 interface ProjectsDict {
@@ -292,35 +292,35 @@ async function getInjectedScriptPath(): Promise<{injectedScripPath: string, clea
 // when running a project is making use of gradle wrapper, the first time we run `gradlew -v`, the download
 // process happens, cluttering the parsing of the gradle output.
 // will extract the needed data using a regex
-function cleanupVersionOutput(gradleVersionOutput: string): string {
-  const matchedData = gradleVersionOutput.match(/(--[\s\S]*?$)/g);
-  if (matchedData) {
-    return matchedData[0];
-  }
-  throw new Error('cannot parse gradle version output:' + gradleVersionOutput);
-}
+// function cleanupVersionOutput(gradleVersionOutput: string): string {
+//   const matchedData = gradleVersionOutput.match(/(--[\s\S]*?$)/g);
+//   if (matchedData) {
+//     return matchedData[0];
+//   }
+//   throw new Error('cannot parse gradle version output:' + gradleVersionOutput);
+// }
 
-function getVersionBuildInfo(gradleVersionOutput: string): VersionBuildInfo {
-  const cleanedVersionOutput: string = cleanupVersionOutput(gradleVersionOutput);
-  const gradleOutputArray = cleanedVersionOutput.split(/\r\n|\r|\n/);
-
-  // from first 3 new lines, we get the gradle version
-  const gradleVersion = gradleOutputArray[1].split(' ')[1].trim();
-  const versionMetaInformation = gradleOutputArray.slice(4, gradleOutputArray.length);
-  // from line 4 until the end we get multiple meta information such as Java, Groovy, Kotlin, etc.
-
-  const metaBuildVersion: { [index: string]: string } = {};
-  // we want to remove all the new lines before processing each line from gradle -v output
-  versionMetaInformation.map((value) => value.replace(/[\s\S](\r\n|\n|\r)/g, ''))
-  .filter((value) => value && value.length > 0 && value.includes(': '))
-  .map((value) => value.split(/(.*): (.*)/))
-  .forEach((splitValue) => metaBuildVersion[toCamelCase(splitValue[1].trim())] = splitValue[2].trim());
-
-  return {
-    gradleVersion,
-    metaBuildVersion,
-  };
-}
+// function getVersionBuildInfo(gradleVersionOutput: string): VersionBuildInfo {
+//   const cleanedVersionOutput: string = cleanupVersionOutput(gradleVersionOutput);
+//   const gradleOutputArray = cleanedVersionOutput.split(/\r\n|\r|\n/);
+//
+//   // from first 3 new lines, we get the gradle version
+//   const gradleVersion = gradleOutputArray[1].split(' ')[1].trim();
+//   const versionMetaInformation = gradleOutputArray.slice(4, gradleOutputArray.length);
+//   // from line 4 until the end we get multiple meta information such as Java, Groovy, Kotlin, etc.
+//
+//   const metaBuildVersion: { [index: string]: string } = {};
+//   // we want to remove all the new lines before processing each line from gradle -v output
+//   versionMetaInformation.map((value) => value.replace(/[\s\S](\r\n|\n|\r)/g, ''))
+//   .filter((value) => value && value.length > 0 && value.includes(': '))
+//   .map((value) => value.split(/(.*): (.*)/))
+//   .forEach((splitValue) => metaBuildVersion[toCamelCase(splitValue[1].trim())] = splitValue[2].trim());
+//
+//   return {
+//     gradleVersion,
+//     metaBuildVersion,
+//   };
+// }
 
 async function getAllDeps(root: string, targetFile: string, options: Options):
     Promise<JsonDepsScriptResult> {
@@ -519,6 +519,6 @@ function buildArgs(
 export const exportsForTests = {
   buildArgs,
   extractJsonFromScriptOutput,
-  getVersionBuildInfo,
+  // getVersionBuildInfo,
   toCamelCase,
 };

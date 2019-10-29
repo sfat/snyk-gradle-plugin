@@ -65,12 +65,12 @@ test('should extract gradle -v output info when running gradlew -v the first tim
   t.equal(versionBuildInfo.metaBuildVersion.os, 'Mac OS X 10.15 x86_64', 'returns OS');
 });
 
-test('should not extract gradle -v output info when output is malformed', async (t) => {
-  const expectedGradleOutput = 'malformed data';
-  try {
-    testableMethods.getVersionBuildInfo(expectedGradleOutput);
-    t.fail('error expected');
-  } catch (e) {
-    t.match(e.message, 'cannot retrieve version build info', 'expected error message');
-  }
-});
+// test('should not extract gradle -v output info when output is malformed', async (t) => {
+//   const expectedGradleOutput = 'malformed data';
+//   try {
+//     testableMethods.getVersionBuildInfo(expectedGradleOutput);
+//     t.fail('error expected');
+//   } catch (e) {
+//     t.match(e.message, 'cannot retrieve version build info', 'expected error message');
+//   }
+// });

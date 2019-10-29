@@ -131,7 +131,7 @@ export interface JsonDepsScriptResult {
   defaultProject: string;
   projects: ProjectsDict;
   allSubProjectNames: string[];
-  versionBuildInfo: VersionBuildInfo;
+  versionBuildInfo?: VersionBuildInfo;
 }
 
 interface ProjectsDict {
@@ -303,7 +303,8 @@ function cleanupVersionOutput(gradleVersionOutput: string): string {
   return '';
 }
 
-function getVersionBuildInfo(gradleVersionOutput: string) {
+function getVersionBuildInfo(gradleVersionOutput: string): VersionBuildInfo | null {
+  try {
     const cleanedVersionOutput: string = cleanupVersionOutput(gradleVersionOutput);
     if (cleanedVersionOutput !== '') {
       const gradleOutputArray = cleanedVersionOutput.split(/\r\n|\r|\n/);
@@ -325,7 +326,10 @@ function getVersionBuildInfo(gradleVersionOutput: string) {
         metaBuildVersion,
       };
     }
-    // throw new Error('cannot retrieve version build info');
+  } catch (error) {
+    debugLog('cannot get version build info' +  error);
+  }
+  return null;
 }
 
 async function getAllDeps(root: string, targetFile: string, options: Options):
@@ -355,13 +359,9 @@ async function getAllDeps(root: string, targetFile: string, options: Options):
       cleanupCallback();
     }
     const extractedJson = extractJsonFromScriptOutput(stdoutText);
-    try {
-      const versionBuildInfo = getVersionBuildInfo(gradleVersionOutput);
-      if (versionBuildInfo) {
-        extractedJson.versionBuildInfo = versionBuildInfo;
-      }
-    } catch (error) {
-      debugLog('version build info not present, skipping ahead: ' + error);
+    const versionBuildInfo = getVersionBuildInfo(gradleVersionOutput);
+    if (versionBuildInfo) {
+      extractedJson.versionBuildInfo = versionBuildInfo;
     }
     return extractedJson;
   } catch (error0) {

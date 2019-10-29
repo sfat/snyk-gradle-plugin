@@ -113,7 +113,7 @@ export async function inspect(
     package: depTreeAndDepRootNames.depTree,
     meta: {
       gradleProjectName: depTreeAndDepRootNames.gradleProjectName,
-      versionBuildInfo: depTreeAndDepRootNames.versionBuildInfo,
+      // versionBuildInfo: depTreeAndDepRootNames.versionBuildInfo,
     },
   };
 }
@@ -166,7 +166,7 @@ async function getAllDepsOneProject(root: string, targetFile: string, options: O
       depTree: DepTree,
       allSubProjectNames: string[],
       gradleProjectName: string,
-      versionBuildInfo: VersionBuildInfo,
+      // versionBuildInfo: VersionBuildInfo,
   }> {
   const packageName = path.basename(root);
   const allProjectDeps = await getAllDeps(root, targetFile, options);
@@ -177,7 +177,7 @@ async function getAllDepsOneProject(root: string, targetFile: string, options: O
       depTree,
       allSubProjectNames,
       gradleProjectName: meta.gradleProjectName,
-      versionBuildInfo: allProjectDeps.versionBuildInfo,
+      // versionBuildInfo: allProjectDeps.versionBuildInfo,
     };
   }
 
@@ -194,7 +194,7 @@ async function getAllDepsOneProject(root: string, targetFile: string, options: O
     },
     allSubProjectNames,
     gradleProjectName: defaultProject,
-    versionBuildInfo: allProjectDeps.versionBuildInfo,
+    // versionBuildInfo: allProjectDeps.versionBuildInfo,
   };
 }
 
@@ -235,7 +235,7 @@ async function getAllDepsAllProjects(root: string, targetFile: string, options: 
       targetFile: targetFileFilteredForCompatibility(allProjectDeps.projects[proj].targetFile),
       meta: {
         gradleProjectName,
-        versionBuildInfo: allProjectDeps.versionBuildInfo,
+        // versionBuildInfo: allProjectDeps.versionBuildInfo,
       },
       depTree: {
         dependencies: allProjectDeps.projects[proj].depDict,

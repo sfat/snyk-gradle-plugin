@@ -1,9 +1,7 @@
 ![Snyk logo](https://snyk.io/style/asset/logo/snyk-print.svg)
 
----
-**NOTE**
-This repository is only a plugin to be used with the Snyk CLI tool. To use this plugin to test and fix vulnerabilities in your project, install the Snyk CLI tool first. Head over to [snyk](https://github.com/snyk/snyk) to get started.
----
+
+> :warning: **NOTE**: This repository is only a plugin to be used with the Snyk CLI tool. To use this plugin to test and fix vulnerabilities in your project, install the Snyk CLI tool first. Head over to [snyk](https://github.com/snyk/snyk) to get started.
 
 # Snyk Gradle CLI Plugin
 
